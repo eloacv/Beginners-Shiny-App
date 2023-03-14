@@ -1,0 +1,68 @@
+---
+title: "Reporte de la pestaña Gráficos"
+subtitle: "De la Shiny app usando el dataset airquality"
+always_allow_html: yes
+author: "Eloa CV"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: zenburn
+    theme: cerulean
+  word_document: default
+  pdf_document: 
+    keep_tex: true
+  runtime: shiny
+---
+***
+# Sobre la app\
+
+Esta aplicación usa como fuente el conjunto de datos ‘airquality’, presente en el paquete ‘datasets’ de RStudio.
+En él se presentan datos sobre las mediciones de la calidad del aire en Nueva York de mayo a setiembre de 1973.
+Presenta 153 observaciones y 6 variables: Ozone , Solar.R , Wind , Temp , Month , Day.
+\
+
+## Data preview omitiendo valores NA\
+
+
+```{r data preview,echo=FALSE}
+library(knitr)
+kable(head(dtna),options = list(searching = FALSE,paging = FALSE))
+```
+
+## Gráficos con dataframe omitiendo valores NA
+
+4 tipos de gráficos
+
+```{r graficos, message=FALSE,warning=FALSE, fig.align="center", fig.width=6, fig.height=6, echo=FALSE}
+colm=as.numeric(input$variab)
+        hist(dtna[,colm],col=input$color,
+             main=paste("Histograma de", names(dtna[colm])),
+             xlab=colm)
+        plot(ggplot(dtna, aes(x= Month, y = !!as.name(input$variab1), color = as.factor(Month))) +
+               geom_boxplot() +
+               ggtitle(
+                 paste(
+                   "Boxplot ",
+                   input$variab1, " vs Month")
+               )+
+               ggeasy::easy_center_title())
+        plot(ggplot(dtna, aes(x= Temp, y= !!as.name(input$variab1), color= as.factor(Month))) + 
+               geom_point(size=2, shape=23)+
+               ggtitle(
+                 paste(
+                   "Scatterplot ",
+                   input$variab1, " vs Temp")
+               )+
+               ggeasy::easy_center_title())
+        plot(ggplot(dtna, aes(x= Temp, y= !!as.name(input$variab1))) +
+               geom_line(color= input$color, linewidth=1, alpha=0.9, linetype=1)+
+               ggtitle(
+                 paste(
+                   "Line chart ",
+                   input$variab1, " vs Temp")
+               )+
+               ggeasy::easy_center_title())
+        
+```
+
+

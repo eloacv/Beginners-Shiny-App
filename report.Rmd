@@ -1,0 +1,52 @@
+---
+title: "Reporte"
+subtitle: "De la Shiny app usando el dataset airquality"
+always_allow_html: yes
+author: "Eloa CV"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: zenburn
+    theme: cerulean
+  word_document: default
+  pdf_document: 
+    keep_tex: true
+  runtime: shiny
+---
+***
+# Sobre la app\
+
+Esta aplicación usa como fuente el conjunto de datos ‘airquality’, presente en el paquete ‘datasets’ de RStudio.
+En él se presentan datos sobre las mediciones de la calidad del aire en Nueva York de mayo a setiembre de 1973.
+Presenta 153 observaciones y 6 variables: Ozone , Solar.R , Wind , Temp , Month , Day.
+
+## Data preview omitiendo valores NA\
+
+```{r datatab,echo=FALSE }
+library(knitr)
+kable(head(dtna),options = list(searching = FALSE,paging = FALSE))
+      
+```
+
+
+
+## Gráfico interactivo con plotly\
+
+```{r plot,message=FALSE,warning=FALSE, fig.align="center", fig.width=6, fig.height=6, echo=FALSE}
+library(ggplot2)
+ggplot(dtna, aes(x=log(Temp), y=!!as.name(input$variab1)))+geom_point() + stat_smooth(method="lm", level=0.99, color=input$color)+
+          ggtitle(
+            paste(
+              "Regresión lineal ",
+              input$variab1, " vs Temp")
+          )+
+          ggeasy::easy_center_title()
+```
+
+## Tabla con los valores usados en la gráfica\
+
+```{r render-data, echo=FALSE}
+library(knitr)
+kable(select(dtna, Temp, !!as.name(input$variab1)))
+```
+
